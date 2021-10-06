@@ -77,11 +77,12 @@ static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 #include <X11/XF86keysym.h>
+#include "shift-tools.c"
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	
-        /* TAGKEYS to swtich desktops */
+        /* Standard TAGKEYS to switch between tags */
         TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -92,6 +93,16 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+        
+        /* Keybinding of shift-tools patch for switching between tags */
+        { MODKEY|ControlMask,           XK_Right,  shiftview,      { .i = +1 } },
+        { MODKEY|ControlMask,           XK_Left,   shiftview,      { .i = -1 } },
+        
+        { MODKEY|ShiftMask,             XK_x,      shiftboth,      { .i = +1 }  },
+        { MODKEY|ShiftMask,             XK_y,      shiftboth,      { .i = -1 }  },
+        
+        { MODKEY|ShiftMask,             XK_Right,  pushup,         {0}  },
+        { MODKEY|ShiftMask,             XK_Left,   pushdown,       {0}  },
 
         /* Generic key bindings */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
@@ -102,12 +113,14 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_Left,   focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_Right,  focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
-
-        /* Special key bindings */
+       
+        /* Special key bindings (multimedia) */
         { 0,                XF86XK_MonBrightnessUp,   spawn, SHCMD("set_brightness +1") },
         { 0,                XF86XK_MonBrightnessDown, spawn, SHCMD("set_brightness -1") },
 
