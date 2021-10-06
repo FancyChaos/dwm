@@ -121,6 +121,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+        { MODKEY,                       XK_m,      spawn,          SHCMD("instantlock") },
        
         /* Special key bindings (multimedia) */
         { 0,                XF86XK_MonBrightnessUp,   spawn, SHCMD("set_brightness +1") },
