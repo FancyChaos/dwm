@@ -103,6 +103,8 @@ static Key keys[] = {
         
         { MODKEY|ShiftMask,             XK_Right,  pushup,         {0}  },
         { MODKEY|ShiftMask,             XK_Left,   pushdown,       {0}  },
+        { MODKEY|ShiftMask,             XK_j,      pushup,         {0}  },
+        { MODKEY|ShiftMask,             XK_k,      pushdown,       {0}  },
 
         /* Generic key bindings */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
