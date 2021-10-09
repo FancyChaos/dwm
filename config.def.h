@@ -123,6 +123,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
         { MODKEY,                       XK_m,      spawn,          SHCMD("instantlock") },
+        { MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+        { MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+        { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+        { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
        
         /* Special key bindings (multimedia) */
         { 0,                XF86XK_MonBrightnessUp,   spawn, SHCMD("set_brightness +1") },
