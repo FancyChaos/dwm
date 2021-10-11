@@ -93,7 +93,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_q,      quit,           {0} },
         
         /* Keybinding of shift-tools patch for switching between tags */
         { MODKEY|ControlMask,           XK_Right,  shiftview,      { .i = +1 } },
