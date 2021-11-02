@@ -242,6 +242,10 @@ static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglescratch(const Arg *arg);
 static void togglefullscr(const Arg *arg);
+static void show_window(Client *c);
+static void show_windows(void);
+static void hide_window(Client *c);
+static void hide_windows(void);
 static int isfullscr(void);
 static void enterfullscr(void);
 static void exitfullscr(void);
@@ -323,6 +327,7 @@ struct Pertag {
 	const Layout *ltidxs[LENGTH(tags) + 1][2]; /* matrix of tags and layouts indexes  */
 	int showbars[LENGTH(tags) + 1]; /* display bar for the current tag */
         int fullscr[LENGTH(tags) + 1]; /* if fullscreen is enabled for the current tag */
+        Client *fullscr_client[LENGTH(tags) +1]; /* Fullscreen client for each tag */
 };
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
@@ -447,8 +452,10 @@ arrange(Monitor *m)
     } else for (m = mons; m; m = m->next)
         arrangemon(m);
 
-    if(isfullscr())
-        enterfullscr();
+    if (isfullscr()) {
+        selmon->sel = selmon->pertag->fullscr_client[selmon->pertag->curtag];
+        hide_windows();
+    }
 }
 
 void
@@ -1132,7 +1139,7 @@ killclient(const Arg *arg)
     if (!selmon->sel)
         return;
     if(selmon->sel->isfullscreen)
-        togglefullscr(NULL);
+        setfullscreen(selmon->sel, 0);
     if (!sendevent(selmon->sel, wmatom[WMDelete])) {
             XGrabServer(dpy);
             XSetErrorHandler(xerrordummy);
@@ -1211,17 +1218,19 @@ manage(Window w, XWindowAttributes *wa)
     setclientstate(c, NormalState);
     if (c->mon == selmon && !isfullscr()) {
         unfocus(selmon->sel, 0);
+    } else if (!isfullscr()) {
         c->mon->sel = c;
-        focus(NULL);
     }
 
     arrange(c->mon);
     XMapWindow(dpy, c->win);
     if (term)
         swallow(term, c);
-    
+
     if(isfullscr())
         XMoveWindow(dpy, c->win, WIDTH(c) * -2, c->y);
+    else
+        focus(NULL);
 }
 
 void
@@ -1667,8 +1676,10 @@ setfullscreen(Client *c, int fullscreen)
 		c->bw = 0;
 		c->isfloating = 1;
 		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
-                selmon->pertag->fullscr[selmon->pertag->curtag] = 1;
 		XRaiseWindow(dpy, c->win);
+
+                // Enter fullscreen
+                enterfullscr();
 	} else if (!fullscreen && c->isfullscreen){
 		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
 			PropModeReplace, (unsigned char*)0, 0);
@@ -1680,8 +1691,11 @@ setfullscreen(Client *c, int fullscreen)
 		c->w = c->oldw;
 		c->h = c->oldh;
 		resizeclient(c, c->x, c->y, c->w, c->h);
-                selmon->pertag->fullscr[selmon->pertag->curtag] = 0;
-		arrange(c->mon);
+
+                // Exit fullscreen
+                exitfullscr();
+
+                arrange(c->mon);
 	}
 }
 
@@ -2025,6 +2039,42 @@ togglefloating(const Arg *arg)
 	arrange(selmon);
 }
 
+void
+show_window(Client *c) {
+    XMoveWindow(dpy, c->win, c->x, c->y);
+}
+
+void
+show_windows() {
+    if (!selmon->showbar)
+        togglebar(NULL);
+
+    Client *c = NULL;
+    for(c = selmon->clients; c; c = c->next) {
+        if(!ISVISIBLE(c))
+            continue;
+        show_window(c);
+    }
+}
+
+void
+hide_window(Client *c) {
+    XMoveWindow(dpy, c->win, WIDTH(c) * -2, c->y);
+}
+
+void
+hide_windows() {
+    if (selmon->showbar)
+        togglebar(NULL);
+
+    Client *c = NULL;
+    for(c = selmon->clients; c; c = c->next) {
+        if(!ISVISIBLE(c) || c->isfullscreen)
+            continue;
+        hide_window(c);
+    }
+}
+
 int
 isfullscr() {
     return selmon->pertag->fullscr[selmon->pertag->curtag];
@@ -2032,43 +2082,23 @@ isfullscr() {
 
 void
 enterfullscr() {
-    if(selmon->showbar)
-        togglebar(NULL);
-
-    Client *c = NULL;
-    for(c = selmon->clients; c; c = c->next) {
-        if(!ISVISIBLE(c) || c->isfullscreen)
-            continue;
-        XMoveWindow(dpy, c->win, WIDTH(c) * -2, c->y);
-    }
+    selmon->pertag->fullscr[selmon->pertag->curtag] = 1;
+    selmon->pertag->fullscr_client[selmon->pertag->curtag] = selmon->sel;
+    hide_windows();
 }
 
 void
 exitfullscr() {
-    if(!selmon->showbar)
-        togglebar(NULL);
-
-    Client *c = NULL;
-    for(c = selmon->clients; c; c = c->next) {
-        if(!ISVISIBLE(c) || c->isfullscreen)
-            continue;
-        XMoveWindow(dpy, c->win, c->x, c->y);
-    }
+    selmon->pertag->fullscr[selmon->pertag->curtag] = 0;
+    show_windows();
 }
 
 void
 togglefullscr(const Arg *arg)
 {
     if(!selmon->sel) return;
-  
+
     setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
-    
-    if(selmon->sel->isfullscreen) {
-        enterfullscr();
-    }
-    else {
-        exitfullscr();
-    }
 }
 
 void
