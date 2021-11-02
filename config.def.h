@@ -82,7 +82,7 @@ static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	
+
         /* Standard TAGKEYS to switch between tags */
         TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
@@ -94,14 +94,14 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask|ControlMask, XK_q,      quit,           {0} },
-        
+
         /* Keybinding of shift-tools patch for switching between tags */
         { MODKEY|ControlMask,           XK_Right,  shiftview,      { .i = +1 } },
         { MODKEY|ControlMask,           XK_Left,   shiftview,      { .i = -1 } },
-        
+
         { MODKEY|ShiftMask,             XK_x,      shiftboth,      { .i = +1 }  },
         { MODKEY|ShiftMask,             XK_y,      shiftboth,      { .i = -1 }  },
-        
+
         { MODKEY|ShiftMask,             XK_Right,  pushup,         {0}  },
         { MODKEY|ShiftMask,             XK_Left,   pushdown,       {0}  },
         { MODKEY|ShiftMask,             XK_j,      pushup,         {0}  },
@@ -127,7 +127,7 @@ static Key keys[] = {
         { MODKEY,                       XK_period, focusmon,       {.i = +1 } },
         { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
         { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-       
+
         /* Special key bindings (multimedia) */
         { 0,                XF86XK_MonBrightnessUp,   spawn, SHCMD("set_brightness +1") },
         { 0,                XF86XK_MonBrightnessDown, spawn, SHCMD("set_brightness -1") },
