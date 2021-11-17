@@ -129,8 +129,8 @@ static Key keys[] = {
         { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
         /* Special key bindings (multimedia) */
-        { 0,                XF86XK_MonBrightnessUp,   spawn, SHCMD("set_brightness +1") },
-        { 0,                XF86XK_MonBrightnessDown, spawn, SHCMD("set_brightness -1") },
+        { 0,                XF86XK_MonBrightnessUp,   spawn, SHCMD("fbrightness +1") },
+        { 0,                XF86XK_MonBrightnessDown, spawn, SHCMD("fbrightness -1") },
 
 };
 
