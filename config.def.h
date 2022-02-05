@@ -17,10 +17,9 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int focusonwheel       = 0;
 static const char *fonts[]              = {
-        "Fira Code Nerd Font Mono:pixelsize=15:antialias=true:autohint=true",
-        "Noto Color Emoji:pixelsize=15:antialias=true:autohint=true"
+        "Fira Code Nerd Font:pixelsize=18:antialias=true"
 };
-static const char dmenufont[]       = "Fira Code Nerd Font Mono:pixelsize=15:antialias=true";
+static const char dmenufont[]       = "Fira Code Nerd Font:pixelsize=18:antialias=true";
 
 /* Colors */
 static const char col_gray1[]       = "#222222";
