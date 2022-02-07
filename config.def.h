@@ -97,6 +97,8 @@ static Key keys[] = {
         /* Keybinding of shift-tools patch for switching between tags */
         { MODKEY|ControlMask,           XK_Right,  shiftview,      { .i = +1 } },
         { MODKEY|ControlMask,           XK_Left,   shiftview,      { .i = -1 } },
+        { MODKEY|ControlMask,           XK_l,      shiftview,      { .i = +1 } },
+        { MODKEY|ControlMask,           XK_h,      shiftview,      { .i = -1 } },
 
         { MODKEY|ShiftMask,             XK_x,      shiftboth,      { .i = +1 }  },
         { MODKEY|ShiftMask,             XK_y,      shiftboth,      { .i = -1 }  },
